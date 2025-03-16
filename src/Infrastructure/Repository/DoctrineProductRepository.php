@@ -12,7 +12,7 @@ class DoctrineProductRepository implements ProductRepositoryInterface
 
     public function findAll(): array
     {
-        return ['test'];
+        return $this->entityManager->getRepository(Product::class)->findAll();
     }
     public function findOneById(int $id): ?Product
     {
