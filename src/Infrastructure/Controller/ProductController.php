@@ -4,7 +4,6 @@ namespace App\Infrastructure\Controller;
 
 
 use App\Application\Service\ProductService;
-use App\Domain\Model\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

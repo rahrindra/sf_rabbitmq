@@ -2,10 +2,9 @@
 
 namespace App\Application\Service;
 
-use App\Application\DTO\ProductDTO;
 use App\Domain\Model\Product;
 use App\Domain\Repository\ProductRepositoryInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Infrastructure\DTO\ProductDTO;
 
 class ProductService
 {

@@ -1,0 +1,54 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: My App
+            description: This is an awesome app!
+            version: 1.0.0
+        paths:
+            api/product:
+                get:
+                    summary: "Liste des produits"
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Product'
+                post:
+                    summary: "création d'un produit"
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/ProductInput"
+                        response:
+                            "201":
+                                description: Created
+        components:
+            schemas:
+                Product:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        name:
+                            type: string
+                            example: "Produit exemple"
+                    required:
+                        - name
+                ProductInput:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                            example: "Produit exemple"
+                    required:
+                        - name
+    areas: # to filter documented areas
+        path_patterns:
+            - '^$' # ne pas charger automatiquement tout les routes
