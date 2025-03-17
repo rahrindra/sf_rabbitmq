@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\DTO;
+namespace App\Application\DTO;
 
 
 use App\Domain\Model\Product;

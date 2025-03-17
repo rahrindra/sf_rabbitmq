@@ -32,10 +32,10 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         }
 
     }
-    public function update(Product $product): void
+    public function delete(Product $product): void
     {
         try {
-            $this->entityManager->persist($product);
+            $this->entityManager->remove($product);
             $this->entityManager->flush();
         } catch (\Throwable $e) {
             throw $e;

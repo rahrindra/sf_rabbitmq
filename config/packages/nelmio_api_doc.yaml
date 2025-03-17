@@ -25,9 +25,92 @@ nelmio_api_doc:
                             application/json:
                                 schema:
                                     $ref: "#/components/schemas/ProductInput"
-                        response:
-                            "201":
-                                description: Created
+                    response:
+                        "201":
+                            description: Created
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/ProductInput"
+            api/product/{id}:
+                get:
+                    summary: détail d'un produit
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du produit"
+                          required: true
+                          schema:
+                              type: integer
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/Product"
+
+
+                patch:
+                    summary: mis à jour d'un produit
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du produit à mettre à jour"
+                          required: true
+                          schema:
+                              type: integer
+                    requestBody:
+                        description: "Données du produit à mettre à jour"
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/ProductInput"
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/Product"
+                put:
+                    summary: remplacer un produit
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du produit à remplacer"
+                          required: true
+                          schema:
+                              type: integer
+                    requestBody:
+                        description: "Données du produit à remplacer"
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/ProductInput"
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/Product"
+                delete:
+                    summary: suppression d'un produit
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du produit à supprimer"
+                          required: true
+                          schema:
+                              type: integer
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
         components:
             schemas:
                 Product:
