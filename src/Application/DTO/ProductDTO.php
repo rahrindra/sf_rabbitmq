@@ -16,9 +16,17 @@ class ProductDTO
     #[Assert\NotBlank()]
     public string $name;
 
+    #[Groups(['default', 'product_list'])]
+    public float $price;
+
+    #[Groups(['default', 'product_list'])]
+    public int $quantity;
+
     public function __construct(Product $product)
     {
         $this->id   = $product->getId();
         $this->name = $product->getName();
+        $this->price = $product->getPrice();
+        $this->quantity = $product->getQuantity();
     }
 }

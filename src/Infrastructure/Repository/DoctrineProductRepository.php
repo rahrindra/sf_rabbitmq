@@ -5,6 +5,8 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Model\Product;
 use App\Domain\Repository\ProductRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Exception\ORMException;
 
 class DoctrineProductRepository implements ProductRepositoryInterface
 {
@@ -14,13 +16,22 @@ class DoctrineProductRepository implements ProductRepositoryInterface
     {
         return $this->entityManager->getRepository(Product::class)->findAll();
     }
-    public function findOneById(int $id): ?Product
+
+    /**
+     * @param int $id
+     * @return Product
+     *
+     * @throws ORMException
+     */
+    public function findOneById(int $id): Product
     {
-        try {
-            return $this->entityManager->find(Product::class, $id);
-        } catch (\Throwable $e) {
-            throw $e;
+        $product =  $this->entityManager->find(Product::class, $id);
+
+        if (!$product instanceof Product) {
+            throw new EntityNotFoundException("Product not found with id {$id}");
         }
+
+        return $product;
     }
     public function save(Product $product): void
     {

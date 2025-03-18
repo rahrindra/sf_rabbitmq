@@ -5,7 +5,7 @@ nelmio_api_doc:
             description: This is an awesome app!
             version: 1.0.0
         paths:
-            api/product:
+            /api/product:
                 get:
                     summary: "Liste des produits"
                     responses:
@@ -32,7 +32,7 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         $ref: "#/components/schemas/ProductInput"
-            api/product/{id}:
+            /api/product/{id}:
                 get:
                     summary: détail d'un produit
                     parameters:
@@ -122,6 +122,12 @@ nelmio_api_doc:
                         name:
                             type: string
                             example: "Produit exemple"
+                        price:
+                            type: float
+                            example: 29.90
+                        quantity:
+                            type: integer
+                            example: 20
                     required:
                         - name
                 ProductInput:
@@ -130,6 +136,12 @@ nelmio_api_doc:
                         name:
                             type: string
                             example: "Produit exemple"
+                        price:
+                            type: float
+                            example: 29.90
+                        quantity:
+                            type: integer
+                            example: 20
                     required:
                         - name
     areas: # to filter documented areas

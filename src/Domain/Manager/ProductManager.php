@@ -4,6 +4,8 @@ namespace App\Domain\Manager;
 
 use App\Domain\Model\Product;
 use App\Domain\Repository\ProductRepositoryInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\isNull;
 
 class ProductManager
@@ -25,32 +27,44 @@ class ProductManager
         return $product;
     }
 
-    public function createProduct(string $name): Product
+    public function createProduct(string $name, float $price, int $quantity): Product
     {
         $product = new Product();
-        $product->setName($name);
+        $product->setName($name)
+            ->setPrice($price)
+            ->setQuantity($quantity);
+        ;
+
         $this->productRepository->save($product);
         return $product;
     }
 
-    public function updateProduct(int $id, string $name): Product
+    public function updateProduct(int $id, ?string $name,  ?float $price, ?int $quantity): Product
     {
         $product = $this->productRepository->findOneById($id);
 
-        if (isset($name)) {
+        if (!is_null($name) && strlen($name) > 0) {
             $product->setName($name);
         }
-
+        if (!is_null($price)) {
+            $product->setPrice($price);
+        }
+        if (!is_null($quantity)) {
+            $product->setQuantity($quantity);
+        }
         $this->productRepository->save($product);
 
         return $product;
     }
 
-    public function replaceProduct(int $id, string $name): Product
+    public function replaceProduct(int $id, string $name, float $price, int $quantity): Product
     {
         $product = $this->productRepository->findOneById($id);
 
-        $product->setName($name);
+        $product->setName($name)
+            ->setPrice($price)
+            ->setQuantity($quantity)
+        ;
         $this->productRepository->save($product);
 
         return $product;
@@ -59,11 +73,6 @@ class ProductManager
     public function deleteProduct(int $id): void
     {
         $product = $this->productRepository->findOneById($id);
-
-        if (!$product) {
-            throw new \DomainException('Product not found');
-        }
-
         $this->productRepository->delete($product);
     }
 }
