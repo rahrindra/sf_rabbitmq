@@ -89,12 +89,11 @@ final class ProductController extends AbstractController
     {
         try {
             $this->productUseCase->deleteProduct($id);
+            return $this->json(null, Response::HTTP_NO_CONTENT);
         }  catch (EntityNotFoundException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_NOT_FOUND);
         } catch(Throwable $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return $this->json([], Response::HTTP_OK);
     }
 }

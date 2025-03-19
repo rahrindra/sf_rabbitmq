@@ -2,6 +2,7 @@
 
 namespace App\Domain\Model;
 
+use App\Domain\Model\Category;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity()]
@@ -20,6 +21,9 @@ class Product
 
     #[ORM\Column]
     private ?int $quantity = 0;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?Category $category = null;
 
     public function getId(): ?int
     {
@@ -58,6 +62,18 @@ class Product
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
