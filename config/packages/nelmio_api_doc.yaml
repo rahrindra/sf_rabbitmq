@@ -8,6 +8,8 @@ nelmio_api_doc:
             /api/product:
                 get:
                     summary: "Liste des produits"
+                    tags:
+                        - product
                     responses:
                         '200':
                             description: "Success"
@@ -19,6 +21,8 @@ nelmio_api_doc:
                                             $ref: '#/components/schemas/Product'
                 post:
                     summary: "création d'un produit"
+                    tags:
+                        - product
                     requestBody:
                         required: true
                         content:
@@ -35,6 +39,8 @@ nelmio_api_doc:
             /api/product/{id}:
                 get:
                     summary: détail d'un produit
+                    tags:
+                        - product
                     parameters:
                         - name: id
                           in: path
@@ -53,6 +59,8 @@ nelmio_api_doc:
 
                 patch:
                     summary: mis à jour d'un produit
+                    tags:
+                        - product
                     parameters:
                         - name: id
                           in: path
@@ -76,6 +84,8 @@ nelmio_api_doc:
                                         $ref: "#/components/schemas/Product"
                 put:
                     summary: remplacer un produit
+                    tags:
+                        - product
                     parameters:
                         - name: id
                           in: path
@@ -99,6 +109,8 @@ nelmio_api_doc:
                                         $ref: "#/components/schemas/Product"
                 delete:
                     summary: suppression d'un produit
+                    tags:
+                        - product
                     parameters:
                         - name: id
                           in: path
@@ -111,6 +123,123 @@ nelmio_api_doc:
                             description: "Success"
                             content:
                                 application/json:
+            /api/category:
+                get:
+                    summary: "Liste des categories"
+                    tags:
+                        - category
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Category'
+                post:
+                    summary: "création d'un categorie"
+                    tags:
+                        - category
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/Category"
+                    response:
+                        "201":
+                            description: Created
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/Category"
+                delete:
+                    summary: suppression d'une categorie
+                    tags:
+                        - category
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant de la categorie à supprimer"
+                          required: true
+                          schema:
+                              type: integer
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+            /api/category/{id}:
+                get:
+                    summary: "détail d'une categorie"
+                    tags:
+                        - category
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du categorie"
+                          required: true
+                          schema:
+                              type: integer
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        $ref: '#/components/schemas/Category'
+                patch:
+                    summary: mis à jour d'une categorie
+                    tags:
+                        - category
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du categorie à mettre à jour"
+                          required: true
+                          schema:
+                              type: integer
+                    requestBody:
+                        description: "Données du categorie à mettre à jour"
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/Category"
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/CategoryInput"
+                put:
+                    summary: remplacer une categorie
+                    tags:
+                        - category
+                    parameters:
+                        - name: id
+                          in: path
+                          description: "Identifiant du categorie à remplacer"
+                          required: true
+                          schema:
+                              type: integer
+                    requestBody:
+                        description: "Données de la categorie à remplacer"
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/CategoryInput"
+                    responses:
+                        '200':
+                            description: "Success"
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: "#/components/schemas/CategoryInput"
         components:
             schemas:
                 Product:
@@ -144,6 +273,33 @@ nelmio_api_doc:
                             example: 20
                     required:
                         - name
+                Category:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        name:
+                            type: string
+                            example: "Vêtement"
+                        reference:
+                            type: string
+                            example: "CAT0001"
+                    required:
+                        - name
+                        - reference
+                CategoryInput:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                            example: "Vêtement"
+                        reference:
+                            type: string
+                            example: "CAT0001"
+                    required:
+                        - name
+                        - reference
     areas: # to filter documented areas
         path_patterns:
             - '^$' # ne pas charger automatiquement tout les routes
