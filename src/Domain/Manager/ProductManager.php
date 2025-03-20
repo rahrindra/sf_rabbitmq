@@ -3,15 +3,14 @@
 namespace App\Domain\Manager;
 
 use App\Domain\Model\Product;
+use App\Domain\Repository\CategoryRepositoryInterface;
 use App\Domain\Repository\ProductRepositoryInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
 
 class ProductManager
 {
     public function __construct(
-        private readonly ProductRepositoryInterface $productRepository
+        private readonly ProductRepositoryInterface $productRepository,
+        private readonly CategoryRepositoryInterface $categoryRepository
     ) {}
 
     public function getProductList(): array
@@ -27,7 +26,7 @@ class ProductManager
         return $product;
     }
 
-    public function createProduct(string $name, float $price, int $quantity): Product
+    public function createProduct(string $name, float $price, int $quantity, ?int $categoryId): Product
     {
         $product = new Product();
         $product->setName($name)
@@ -35,11 +34,16 @@ class ProductManager
             ->setQuantity($quantity);
         ;
 
+        if (!is_null($categoryId)) {
+            $category = $this->categoryRepository->findOneById($categoryId);
+            $product->setCategory($category);
+        }
+
         $this->productRepository->save($product);
         return $product;
     }
 
-    public function updateProduct(int $id, ?string $name,  ?float $price, ?int $quantity): Product
+    public function updateProduct(int $id, ?string $name,  ?float $price, ?int $quantity, ?int $categoryId): Product
     {
         $product = $this->productRepository->findOneById($id);
 
@@ -52,12 +56,16 @@ class ProductManager
         if (!is_null($quantity)) {
             $product->setQuantity($quantity);
         }
+        if (!is_null($categoryId)) {
+            $category = $this->categoryRepository->findOneById($categoryId);
+            $product->setCategory($category);
+        }
         $this->productRepository->save($product);
 
         return $product;
     }
 
-    public function replaceProduct(int $id, string $name, float $price, int $quantity): Product
+    public function replaceProduct(int $id, string $name, float $price, int $quantity, ?int $categoryId): Product
     {
         $product = $this->productRepository->findOneById($id);
 
@@ -65,6 +73,13 @@ class ProductManager
             ->setPrice($price)
             ->setQuantity($quantity)
         ;
+
+        if (!is_null($categoryId)) {
+            $category = $this->categoryRepository->findOneById($categoryId);
+            $product->setCategory($category);
+        } else {
+            $product->setCategory(null);
+        }
         $this->productRepository->save($product);
 
         return $product;

@@ -21,7 +21,7 @@ final class ProductController extends AbstractController
     {
         $productList = $this->productUseCase->getProductList();
 
-        return $this->json($productList, Response::HTTP_OK);
+        return $this->json($productList, Response::HTTP_OK, [], ['groups' => ['product_list', 'category_list']]);
     }
 
     #[Route('/product/{id}', name: 'product_detail', methods: ['GET'])]
@@ -29,7 +29,7 @@ final class ProductController extends AbstractController
     {
         try {
             $productDTO =  $this->productUseCase->getProductDetails($id);
-            return $this->json($productDTO, Response::HTTP_OK);
+            return $this->json($productDTO, Response::HTTP_OK, [], ['groups' => ['product_detail', 'category_list']]);
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch(Throwable $exception) {
@@ -44,7 +44,8 @@ final class ProductController extends AbstractController
 
         try {
             $productDTO = $this->productUseCase->createProduct($data);
-            return $this->json($productDTO, Response::HTTP_CREATED, [], ["groups" => 'default'] );
+
+            return $this->json($productDTO, Response::HTTP_CREATED, [], ["groups" => ['product_detail', 'category_list']] );
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch(Throwable $exception) {
@@ -59,9 +60,11 @@ final class ProductController extends AbstractController
 
         try {
             $productDTO = $this->productUseCase->updateProduct($id, $data);
-            return $this->json($productDTO, Response::HTTP_OK, [], ["groups" => 'default'] );
+            return $this->json($productDTO, Response::HTTP_OK, [], ["groups" => ['product_detail', 'category_list']] );
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
+        } catch (EntityNotFoundException $exception) {
+            return $this->json($exception->getMessage(), Response::HTTP_NOT_FOUND);
         } catch(Throwable $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -74,7 +77,7 @@ final class ProductController extends AbstractController
 
         try {
             $productDTO = $this->productUseCase->replaceProduct($id, $data);
-            return $this->json($productDTO, Response::HTTP_OK, [], ["groups" => 'default'] );
+            return $this->json($productDTO, Response::HTTP_OK, [], ["groups" => ['product_detail', 'category_list']] );
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch (EntityNotFoundException $exception) {

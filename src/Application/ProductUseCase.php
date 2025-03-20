@@ -4,6 +4,7 @@ namespace App\Application;
 
 use App\Application\DTO\ProductDTO;
 use App\Domain\Manager\ProductManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductUseCase
 {
@@ -16,7 +17,12 @@ class ProductUseCase
     public function getProductList(): array
     {
         $productList = $this->productManager->getProductList();
-        return $productList;
+        $productListDTO = [];
+        foreach ($productList as $product) {
+            $productDTO = new ProductDTO($product);
+            $productListDTO[] = $productDTO;
+        }
+        return $productListDTO;
     }
 
     public function getProductDetails(int $id): ProductDTO
@@ -31,7 +37,7 @@ class ProductUseCase
             throw new \InvalidArgumentException(self::INVALID_ARGUMENT);
         }
 
-        $product = $this->productManager->createProduct(name: $data['name'], price: $data['price'], quantity: $data['quantity']);
+        $product = $this->productManager->createProduct(name: $data['name'], price: $data['price'], quantity: $data['quantity'], categoryId: $data['category']);
         return new ProductDTO($product);
     }
 
@@ -41,7 +47,13 @@ class ProductUseCase
             throw new \InvalidArgumentException(self::INVALID_ARGUMENT);
         }
 
-        $product = $this->productManager->updateProduct(id: $productId, name: $data['name'], price: $data['price'], quantity: $data['quantity']);
+        $product = $this->productManager->updateProduct(
+            id: $productId,
+            name: $data['name'],
+            price: $data['price'],
+            quantity: $data['quantity'],
+            categoryId: $data['categoryId']
+        );
         return new ProductDTO($product);
     }
 
@@ -51,7 +63,13 @@ class ProductUseCase
             throw new \InvalidArgumentException(self::INVALID_ARGUMENT);
         }
 
-        $product = $this->productManager->replaceProduct(id: $productId, name: $data['name'], price: $data['price'], quantity: $data['quantity']);
+        $product = $this->productManager->replaceProduct(
+            id: $productId,
+            name: $data['name'],
+            price: $data['price'],
+            quantity: $data['quantity'],
+            categoryId: $data['categoryId']
+        );
         return new ProductDTO($product);
     }
 

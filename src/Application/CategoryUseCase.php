@@ -3,7 +3,9 @@
 namespace App\Application;
 
 use App\Application\DTO\CategoryDTO;
+use App\Application\DTO\ProductDTO;
 use App\Domain\Manager\CategoryManager;
+use App\Domain\Model\Category;
 
 class CategoryUseCase
 {
@@ -16,10 +18,10 @@ class CategoryUseCase
 
     public function getCategoryList(): array
     {
-        $categoryList = $this->categoryManager->getCategoryList();
+        $categoryList    = $this->categoryManager->getCategoryList();
         $categoryDtoList = [];
         foreach ($categoryList as $category) {
-            $categoryDTO = new CategoryDTO($category);
+            $categoryDTO       = new CategoryDTO($category);
             $categoryDtoList[] = $categoryDTO;
         }
         return $categoryDtoList;
@@ -39,8 +41,11 @@ class CategoryUseCase
 
     public function getCategoryDetails(int $id): CategoryDTO
     {
-        $category = $this->categoryManager->getCategoryDetails(id: $id);
-        return new CategoryDTO($category);
+        $category              = $this->categoryManager->getCategoryDetails(id: $id);
+        $categoryDTO           = new CategoryDTO($category);
+        $categoryDTO->products = $this->getProductsDTO($category);
+
+        return $categoryDTO;
     }
 
 
@@ -50,9 +55,12 @@ class CategoryUseCase
             throw new \InvalidArgumentException(self::INVALID_ARGUMENT);
         }
 
-        $category = $this->categoryManager->updateCategory(id: $categoryId, name: $data['name'], reference: $data['reference']);
+        $category               = $this->categoryManager->updateCategory(id: $categoryId, name: $data['name'], reference: $data['reference']);
 
-        return new CategoryDTO($category);
+        $categoryDTO            = new CategoryDTO($category);
+        $categoryDTO->products  = $this->getProductsDTO($category);
+
+        return $categoryDTO;
     }
 
 
@@ -63,7 +71,11 @@ class CategoryUseCase
         }
 
         $category = $this->categoryManager->replaceCategory(id: $categoryId, name: $data['name'], reference: $data['reference']);
-        return new CategoryDTO($category);
+
+        $categoryDTO            = new CategoryDTO($category);
+        $categoryDTO->products  = $this->getProductsDTO($category);
+
+        return $categoryDTO;
     }
 
 
@@ -82,5 +94,18 @@ class CategoryUseCase
             return false;
         }
         return true;
+    }
+
+    /**
+     * @description retourne la liste des produits (ProductDTO) du categorie
+     */
+    public function getProductsDTO(Category $category): array
+    {
+        $productsDTO = [];
+        foreach ($category->getProducts() as $product) {
+            $productsDTO[] = new ProductDTO($product);
+        }
+
+        return $productsDTO;
     }
 }

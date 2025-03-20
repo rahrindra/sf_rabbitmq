@@ -9,14 +9,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CategoryDTO
 {
-    #[Groups(['default', 'category_list', 'category_detail'])]
+    #[Groups(['category_list', 'category_detail'])]
     public string $id;
 
-    #[Groups(['default', 'category_list', 'category_detail'])]
+    #[Groups(['category_list', 'category_detail'])]
     #[Assert\NotBlank()]
     public string $name;
 
-    #[Groups(['default', 'category_list', 'category_detail'])]
+    #[Groups(['category_list', 'category_detail'])]
     public string $reference;
 
     #[Groups(['category_detail'])]

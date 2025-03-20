@@ -20,7 +20,7 @@ final class CategoryController extends AbstractController
     {
         $categoriesDTO = $this->categoryUseCase->getCategoryList();
 
-        return $this->json($categoriesDTO, Response::HTTP_OK, [], ['groups' => ['default']]);
+        return $this->json($categoriesDTO, Response::HTTP_OK, [], ['groups' => ['category_list']]);
     }
 
 
@@ -31,7 +31,7 @@ final class CategoryController extends AbstractController
 
         try {
             $categoryDTO = $this->categoryUseCase->createCategory($data);
-            return $this->json($categoryDTO, Response::HTTP_CREATED, [], ['groups' => ['default']]);
+            return $this->json($categoryDTO, Response::HTTP_CREATED, [], ['groups' => ['category_detail']]);
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch (\Throwable $exception) {
@@ -44,7 +44,7 @@ final class CategoryController extends AbstractController
     {
         try {
             $categoryDTO = $this->categoryUseCase->getCategoryDetails($id);
-            return $this->json($categoryDTO, Response::HTTP_OK, [], ['groups' => ['category_detail']]);
+            return $this->json($categoryDTO, Response::HTTP_OK, [], ['groups' => ['category_detail', 'product_list']]);
         } catch (EntityNotFoundException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_NOT_FOUND);
         } catch (Throwable $exception) {
@@ -59,7 +59,7 @@ final class CategoryController extends AbstractController
 
         try {
             $categoryDTO = $this->categoryUseCase->updateCategory($id, $data);
-            return $this->json($categoryDTO, Response::HTTP_OK, [], ['groups' => ['category_detail']]);
+            return $this->json($categoryDTO, Response::HTTP_OK, [], ['groups' => ['category_detail', 'product_list']]);
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch (EntityNotFoundException $exception) {
@@ -76,7 +76,7 @@ final class CategoryController extends AbstractController
 
         try {
             $categoryDTO = $this->categoryUseCase->replaceCategory($id, $data);
-            return $this->json($categoryDTO, Response::HTTP_OK, [], ['groups' => ['category_detail']]);
+            return $this->json($categoryDTO, Response::HTTP_OK, [], ['groups' => ['category_detail', 'product_list']]);
         } catch (\InvalidArgumentException $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         } catch (EntityNotFoundException $exception) {

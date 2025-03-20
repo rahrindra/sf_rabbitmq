@@ -28,14 +28,14 @@ nelmio_api_doc:
                         content:
                             application/json:
                                 schema:
-                                    $ref: "#/components/schemas/ProductInput"
-                    response:
+                                    $ref: "#/components/schemas/Product"
+                    responses:
                         "201":
                             description: Created
                             content:
                                 application/json:
                                     schema:
-                                        $ref: "#/components/schemas/ProductInput"
+                                        $ref: "#/components/schemas/ProductForItem"
             /api/product/{id}:
                 get:
                     summary: détail d'un produit
@@ -74,7 +74,7 @@ nelmio_api_doc:
                         content:
                             application/json:
                                 schema:
-                                    $ref: "#/components/schemas/ProductInput"
+                                    $ref: "#/components/schemas/ProductForItem"
                     responses:
                         '200':
                             description: "Success"
@@ -99,7 +99,7 @@ nelmio_api_doc:
                         content:
                             application/json:
                                 schema:
-                                    $ref: "#/components/schemas/ProductInput"
+                                    $ref: "#/components/schemas/ProductForItem"
                     responses:
                         '200':
                             description: "Success"
@@ -119,7 +119,7 @@ nelmio_api_doc:
                           schema:
                               type: integer
                     responses:
-                        '200':
+                        '204':
                             description: "Success"
                             content:
                                 application/json:
@@ -166,7 +166,7 @@ nelmio_api_doc:
                           schema:
                               type: integer
                     responses:
-                        '200':
+                        '204':
                             description: "Success"
                             content:
                                 application/json:
@@ -189,7 +189,7 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         type: object
-                                        $ref: '#/components/schemas/Category'
+                                        $ref: '#/components/schemas/CategoryForItem'
                 patch:
                     summary: mis à jour d'une categorie
                     tags:
@@ -214,7 +214,7 @@ nelmio_api_doc:
                             content:
                                 application/json:
                                     schema:
-                                        $ref: "#/components/schemas/CategoryInput"
+                                        $ref: "#/components/schemas/CategoryForItem"
                 put:
                     summary: remplacer une categorie
                     tags:
@@ -232,14 +232,14 @@ nelmio_api_doc:
                         content:
                             application/json:
                                 schema:
-                                    $ref: "#/components/schemas/CategoryInput"
+                                    $ref: "#/components/schemas/CategoryForItem"
                     responses:
                         '200':
                             description: "Success"
                             content:
                                 application/json:
                                     schema:
-                                        $ref: "#/components/schemas/CategoryInput"
+                                        $ref: "#/components/schemas/CategoryForItem"
         components:
             schemas:
                 Product:
@@ -259,9 +259,12 @@ nelmio_api_doc:
                             example: 20
                     required:
                         - name
-                ProductInput:
+                ProductForItem:
                     type: object
                     properties:
+                        id:
+                            type: integer
+                            example: 1
                         name:
                             type: string
                             example: "Produit exemple"
@@ -271,6 +274,9 @@ nelmio_api_doc:
                         quantity:
                             type: integer
                             example: 20
+                        category:
+                            type: object
+                            $ref: "#/components/schemas/Category"
                     required:
                         - name
                 Category:
@@ -288,15 +294,22 @@ nelmio_api_doc:
                     required:
                         - name
                         - reference
-                CategoryInput:
+                CategoryForItem:
                     type: object
                     properties:
+                        id:
+                            type: integer
+                            example: 1
                         name:
                             type: string
                             example: "Vêtement"
                         reference:
                             type: string
                             example: "CAT0001"
+                        products:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Product'
                     required:
                         - name
                         - reference
