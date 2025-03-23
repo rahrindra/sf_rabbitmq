@@ -4,7 +4,6 @@ namespace App\Application;
 
 use App\Application\DTO\ProductDTO;
 use App\Domain\Manager\ProductManager;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductUseCase
 {
@@ -19,7 +18,8 @@ class ProductUseCase
         $productList = $this->productManager->getProductList();
         $productListDTO = [];
         foreach ($productList as $product) {
-            $productDTO = new ProductDTO($product);
+            $productDTO =  ProductDTO::fromEntity($product);
+
             $productListDTO[] = $productDTO;
         }
         return $productListDTO;
@@ -28,7 +28,7 @@ class ProductUseCase
     public function getProductDetails(int $id): ProductDTO
     {
         $product = $this->productManager->getProduct(id: $id);
-        return new ProductDTO($product);
+        return ProductDTO::fromEntity($product);
     }
 
     public function createProduct(array $data): ProductDTO
@@ -38,7 +38,7 @@ class ProductUseCase
         }
 
         $product = $this->productManager->createProduct(name: $data['name'], price: $data['price'], quantity: $data['quantity'], categoryId: $data['category']);
-        return new ProductDTO($product);
+        return ProductDTO::fromEntity($product);
     }
 
     public function updateProduct(int $productId, array $data): ProductDTO
@@ -54,7 +54,7 @@ class ProductUseCase
             quantity: $data['quantity'],
             categoryId: $data['categoryId']
         );
-        return new ProductDTO($product);
+        return ProductDTO::fromEntity($product);
     }
 
     public function replaceProduct(int $productId, array $data): ProductDTO
@@ -70,7 +70,7 @@ class ProductUseCase
             quantity: $data['quantity'],
             categoryId: $data['categoryId']
         );
-        return new ProductDTO($product);
+        return ProductDTO::fromEntity($product);
     }
 
     public function deleteProduct(int $productId): void
