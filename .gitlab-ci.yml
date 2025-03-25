@@ -1,7 +1,39 @@
 stages:
   - test
+  - build
+
+variables:
+  SYMFONY_ENV: test
+  DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
+
+cache:
+  key: composer
+  paths:
+    - vendor/
+    - var/cache/
+
+before_script:
+  - apt-get update && apt-get install -y unzip
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - composer install --prefer-dist --no-interaction
 
 test:
   stage: test
+  image: php:8.2
+  services:
+    - postgres:15
   script:
-    - echo "Hello, GitLab CI !"
+    - php bin/console doctrine:database:create --env=test
+    - php bin/console doctrine:schema:update --force --env=test
+    - php bin/console doctrine:fixtures:load --env=test --no-interaction
+    - vendor/bin/phpunit --testdox --log-junit var/junit.xml
+  artifacts:
+    reports:
+      junit: var/junit.xml
+    when: always
+
+build:
+  stage: build
+  image: php:8.2
+  script:
+    - echo "Hello, build success with GitLab CI/CD !"

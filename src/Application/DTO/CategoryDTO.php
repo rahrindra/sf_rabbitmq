@@ -9,24 +9,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CategoryDTO
 {
-    #[Groups(['category_list', 'category_detail'])]
-    public string $id;
+    public function __construct(
+        #[Groups(['category_list', 'category_detail'])]
+        public string $id,
 
-    #[Groups(['category_list', 'category_detail'])]
-    #[Assert\NotBlank()]
-    public string $name;
+        #[Groups(['category_list', 'category_detail'])]
+        #[Assert\NotBlank()]
+        public string $name,
 
-    #[Groups(['category_list', 'category_detail'])]
-    public string $reference;
+        #[Groups(['category_list', 'category_detail'])]
+        public string $reference,
 
-    #[Groups(['category_detail'])]
-    public array $products;
+        #[Groups(['category_detail'])]
+        public array $products,
+    ) {}
 
-    public function __construct(Category $category)
+    public static function fromEntity(Category $category): CategoryDTO
     {
-        $this->id   = $category->getId();
-        $this->name = $category->getName();
-        $this->reference = $category->getReference();
-        $this->products = $category->getProducts()->toArray();
+        $productList = $category->getProducts()->toArray();
+        return new self($category->getId(), $category->getName(), $category->getReference(), $productList);
     }
 }

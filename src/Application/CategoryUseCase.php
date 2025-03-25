@@ -21,7 +21,7 @@ class CategoryUseCase
         $categoryList    = $this->categoryManager->getCategoryList();
         $categoryDtoList = [];
         foreach ($categoryList as $category) {
-            $categoryDTO       = new CategoryDTO($category);
+            $categoryDTO       = CategoryDTO::fromEntity($category);
             $categoryDtoList[] = $categoryDTO;
         }
         return $categoryDtoList;
@@ -35,14 +35,14 @@ class CategoryUseCase
         }
 
         $category = $this->categoryManager->createCategory(name: $data['name'], reference: $data['reference']);
-        return new CategoryDTO($category);
+        return CategoryDTO::fromEntity($category);
     }
 
 
     public function getCategoryDetails(int $id): CategoryDTO
     {
         $category              = $this->categoryManager->getCategoryDetails(id: $id);
-        $categoryDTO           = new CategoryDTO($category);
+        $categoryDTO           = CategoryDTO::fromEntity($category);
         $categoryDTO->products = $this->getProductsDTO($category);
 
         return $categoryDTO;
@@ -57,7 +57,7 @@ class CategoryUseCase
 
         $category               = $this->categoryManager->updateCategory(id: $categoryId, name: $data['name'], reference: $data['reference']);
 
-        $categoryDTO            = new CategoryDTO($category);
+        $categoryDTO            = CategoryDTO::fromEntity($category);
         $categoryDTO->products  = $this->getProductsDTO($category);
 
         return $categoryDTO;
@@ -72,7 +72,7 @@ class CategoryUseCase
 
         $category = $this->categoryManager->replaceCategory(id: $categoryId, name: $data['name'], reference: $data['reference']);
 
-        $categoryDTO            = new CategoryDTO($category);
+        $categoryDTO            = CategoryDTO::fromEntity($category);
         $categoryDTO->products  = $this->getProductsDTO($category);
 
         return $categoryDTO;
@@ -99,11 +99,12 @@ class CategoryUseCase
     /**
      * @description retourne la liste des produits (ProductDTO) du categorie
      */
-    public function getProductsDTO(Category $category): array
+    public static function getProductsDTO(Category $category): array
     {
         $productsDTO = [];
         foreach ($category->getProducts() as $product) {
-            $productsDTO[] = new ProductDTO($product);
+
+            $productsDTO[] = ProductDTO::fromEntity($product);
         }
 
         return $productsDTO;
