@@ -34,5 +34,6 @@ test:
 
 build:
   stage: build
+  image: php:8.2
   script:
     - echo "Hello, build success with GitLab CI/CD !"
