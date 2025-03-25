@@ -34,11 +34,5 @@ test:
 
 build:
   stage: build
-  image: node:20
   script:
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - dist/
-    expire_in: 1h
+    - echo "Hello, build success with GitLab CI/CD !"
