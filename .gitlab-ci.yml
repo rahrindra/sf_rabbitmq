@@ -25,7 +25,8 @@ test:
   script:
     - php bin/console doctrine:database:create --env=test
     - php bin/console doctrine:schema:update --force --env=test
-    - vendor/bin/phpunit --testdox
+    - php bin/console doctrine:fixtures:load --force --env=test
+    - vendor/bin/phpunit --testdox --log-junit var/junit.xml
   artifacts:
     reports:
       junit: var/junit.xml
