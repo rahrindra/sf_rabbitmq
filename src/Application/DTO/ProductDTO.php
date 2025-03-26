@@ -2,7 +2,6 @@
 
 namespace App\Application\DTO;
 
-
 use App\Domain\Model\Category;
 use App\Domain\Model\Product;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -25,7 +24,7 @@ class ProductDTO
         public int $quantity,
 
         #[Groups(['product_detail'])]
-        public ?CategoryDTO $category
+        public ?CategoryDTO $category = null,
     ) {}
 
     public  static function fromEntity(Product $product): ProductDTO
