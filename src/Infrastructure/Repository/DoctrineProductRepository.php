@@ -4,13 +4,17 @@ namespace App\Infrastructure\Repository;
 
 use App\Domain\Model\Product;
 use App\Domain\Repository\ProductRepositoryInterface;
+use App\Infrastructure\ApiClient\ElasticsearchClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Exception\ORMException;
 
 class DoctrineProductRepository implements ProductRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ElasticsearchClient $elasticsearchClient
+    ) {}
 
     public function findAll(): array
     {
@@ -38,18 +42,21 @@ class DoctrineProductRepository implements ProductRepositoryInterface
         try {
             $this->entityManager->persist($product);
             $this->entityManager->flush();
+            $this->elasticsearchClient->indexProduct($product);
+
         } catch (\Throwable $e) {
             throw $e;
         }
-
     }
     public function delete(Product $product): void
     {
         try {
             $this->entityManager->remove($product);
             $this->entityManager->flush();
+            $this->elasticsearchClient->deleteProduct($product);
         } catch (\Throwable $e) {
             throw $e;
         }
     }
+
 }
